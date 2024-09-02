@@ -14,6 +14,21 @@ const Login = () => {
     observeAuthState();
   }, [observeAuthState]);
 
+  async function checkUser(oneUser) {
+    return await UserDAO.getUserById(oneUser.email)
+      .then((result) => {
+        if (result.success) {
+          console.log("El usuario ya está registrado: ", oneUser.email)
+        } else {
+          UserDAO.createUser(oneUser);
+          console.log("El usuario se registró.")
+        }
+      })
+      .catch((error) => {
+        console.error("Error en checkUser:", error);
+      });
+  }
+
   useEffect(() => {
     if (user) {
       const newUser = {
@@ -21,7 +36,9 @@ const Login = () => {
         name: user.displayName,
         photo: user.photoURL,
       };
-      UserDAO.createUser(newUser);
+
+      //Verifica si el usuario ya está registrado, sino, lo registra
+      checkUser(newUser)
     }
   }, [user, navigate]);
 
