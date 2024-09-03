@@ -1,17 +1,27 @@
 .container-login {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: center;       /* Centra los elementos horizontalmente */
+    justify-content: center;   /* Centra los elementos verticalmente */
     height: 100vh;
+    width: 100vw;              /* Asegura que el contenedor ocupe todo el ancho de la ventana */
+    text-align: center;        /* Centra el texto dentro del contenedor */
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0;       
 }
 
 .welcome-text {
     font-size: x-large;
     color: #333;
+    margin-bottom: 20px; 
 }
 
 .loading-text {
     font-size: medium;
     color: #666;
-}  
+    text-align: center;
+}
+
+
+
