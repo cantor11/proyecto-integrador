@@ -1,31 +1,48 @@
-import { useRef } from "react";
-import { useFrame } from '@react-three/fiber';
+import { useFrame } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import useObjectStore from "../../stores/use-Object-store.js";
 
-const House = () =>{
-    const boxRef = useRef(null);
-    const coneRef = useRef(null);
-    useFrame((state, delta) => {
-        boxRef.current.rotation.y += 1 * delta;
-        coneRef.current.rotation.y += 1 * delta;;
-    });
+/* eslint-disable react/no-unknown-property */
+const Object = () => {
+  const ObjectRef = useRef(null);
+  const {setObjectTransforms} = useObjectStore();
+  
+  const speed = 0.01; 
+  const range = 10;
+  const [direction, setDirection] = useState(1);
+  
+  useFrame((state, delta) => {
+    if (ObjectRef.current) {
+     
+      ObjectRef.current.position.y = Math.cos(state.clock.elapsedTime);
+      ObjectRef.current.position.x += speed * direction;
+     
+      if (ObjectRef.current.position.x > range || ObjectRef.current.position.x < -range) {
+        setDirection(-direction); 
+      }
 
-    return(
-        <group scale={[2, 1, 3]}>
-            <mesh
-                ref={coneRef}
-                position-y={1}
-                rotation-y={Math.PI* 0.25}
-                scale-y ={1.5}
-            >
-                <coneGeometry args={[1, 1, 4]} />
-                <meshStandardMaterial color={0xffc300} />
-            </mesh>
-            <mesh ref={boxRef}>
-                <boxGeometry args={[1, 1.3, 1]} />
-                <meshStandardMaterial color={"purple"} />
-            </mesh>
-        </group>
-    );
+      
+      setObjectTransforms({
+        position: ObjectRef.current.position,
+        scale: ObjectRef.current.scale,
+      });
+    }
+  });
+
+  return (
+    <group ref={ObjectRef} name="Object" scale={[2, 3, 1]}>
+      <mesh name="roof" position-y={1} rotation-y={Math.PI / 4} scale-y={1.5}>
+        <coneGeometry args={[1, 1, 4]} />
+        <meshPhongMaterial color={"green"} />
+      </mesh>
+      <mesh name="structure">
+        <boxGeometry args={[0.5, 1, 1]} />
+        <meshPhysicalMaterial wireframe={false} color="SaddleBrown" />
+      </mesh>
+    </group>
+  );
+  
+
 };
 
-export default House;
+export default Object;
