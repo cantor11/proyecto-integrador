@@ -23,6 +23,7 @@ const Login = () => {
           UserDAO.createUser(oneUser);
           console.log("El usuario se registró.")
         }
+        navigate("/world");
       })
       .catch((error) => {
         console.error("Error en checkUser:", error);
